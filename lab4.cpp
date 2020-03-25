@@ -247,19 +247,34 @@ int main(int argc, char *argv[])
 	cout << endl;
 
 	//Вектор невязки для метода Гауса
-	double podstav, *vector;
-	vector = new double[n];
-	cout << "Vector neviazki Gaus V=(";
-	for (int i = 0; i < n; i++) {
+	double podstav, vector;
+	//vector = new double[n];
+	double normVec = 0;
+	cout << "Norm vector neviazki Gaus V=";
+	for (int i = 0; i < 1; i++) {
 		podstav = 0;
 		for (int j = 0; j < n; j++) {
 			if(x[i][j]!=0)
 			podstav += t[j] * x[i][j];
 		}
-		vector[i] = abs(f[i]-podstav);
-		cout << vector[i] << ",";
+		vector = abs(f[i]-podstav);
+		normVec = vector;
+		//cout << vector[i] << ",";
 	}
-	cout << ")" << endl<<endl;
+	for (int i = 1; i < n; i++) {
+		podstav = 0;
+		for (int j = 0; j < n; j++) {
+			if (x[i][j] != 0)
+				podstav += t[j] * x[i][j];
+		}
+		vector = abs(f[i] - podstav);
+		if (vector >= normVec) {
+			normVec = vector;
+		}
+		//cout << vector[i] << ",";
+	}
+	//cout << ")" << endl<<endl;
+	cout << normVec <<endl<<endl;
 
 	//Гаус-Зейдель
 	cout << "Reshenie po Gausu-Zeidely:" << endl;
@@ -290,19 +305,33 @@ int main(int argc, char *argv[])
 	cout << endl;
 
 	//Вектор невязки для метода Гауса-Зейделя
-	double podstav1, *vector1;
-	vector1 = new double[n];
-	cout << "Vector neviazki Gaus-Zeidel V=(";
-	for (int i = 0; i < n; i++) {
+	double podstav1, vector1;
+	double normVec1=0;
+	cout << "Vector neviazki Gaus-Zeidel V=";
+	for (int i = 0; i < 1; i++) {
 		podstav1 = 0;
 		for (int j = 0; j < n; j++) {
 			if (x[i][j] != 0)
 				podstav1 += r[j] * x[i][j];
 		}
-		vector1[i] = abs(f[i] - podstav1);
-		cout << vector1[i] << ",";
+		vector1 = abs(f[i] - podstav1);
+		normVec1 = vector1;
+		//cout << vector[i] << ",";
 	}
-	cout << ")" << endl<<endl;
+	for (int i = 1; i < n; i++) {
+		podstav1 = 0;
+		for (int j = 0; j < n; j++) {
+			if (x[i][j] != 0)
+				podstav1 += r[j] * x[i][j];
+		}
+		vector1 = abs(f[i] - podstav1);
+		if (vector1 >= normVec1) {
+			normVec1 = vector1;
+		}
+		//cout << vector[i] << ",";
+	}
+	//cout << ")" << endl<<endl;
+	cout << normVec1 << endl << endl;
 
 	
 
