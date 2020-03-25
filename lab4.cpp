@@ -164,13 +164,13 @@ int main(int argc, char *argv[])
 
 	//Задание коэфициэнтов
 	for (int i = 0; i < n; i++) {
-		if (i < n - 1) {
+		//if (i < n - 1) {
 			d[i] = 1;
 			b[i] = 1;
 			a[i] = 0.1;
 			e[i] = 0.1;
-		}
-		else {
+		//}
+		/*else {
 			double a1, b1, d1, e1;
 			cout << "a(n)=";
 			cin >> a1;
@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
 			cin >> e1;
 			cout << endl;
 			e[i] = e1;
-		}
+		}*/
 	}
 
 	//Задание матрицы
