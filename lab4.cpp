@@ -266,6 +266,7 @@ int main(int argc, char *argv[])
 	double *p, *r;
 	p = new double[n];
 	r = new double[n];
+	int iteration=0;
 	do
 	{
 		for (int i = 0; i < n; i++)
@@ -279,11 +280,13 @@ int main(int argc, char *argv[])
 				var += (x[i][j] * p[j]);
 			r[i] = (f[i] - var) / x[i][i];
 		}
+		iteration++;
 	} 
 	while (!shodimost(r, p));
 	for (int i = 0; i < n; i++) {
 		cout << "x[" << i << "]=" << r[i] << endl;
 	}
+	cout << "Iteration:" << iteration << endl;
 	cout << endl;
 
 	//Вектор невязки для метода Гауса-Зейделя
