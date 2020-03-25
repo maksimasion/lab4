@@ -1,25 +1,26 @@
 ﻿#include<iostream>
+#include<math.h>
 #include<string>
 #include<cstdlib>
 using namespace std;
 
 double NORM(double **x, double n) {
-double normiA = 0;
-for (int j = 0; j < n; j++) {
-	normiA += abs(x[0][j]);
-}
-for (int i = 1; i < n; i++) {
-	double normA = 0;
+	double normiA = 0;
 	for (int j = 0; j < n; j++) {
-		normA +=abs(x[i][j]);
+		normiA += abs(x[0][j]);
+	}
+	for (int i = 1; i < n; i++) {
+		double normA = 0;
+		for (int j = 0; j < n; j++) {
+			normA += abs(x[i][j]);
 
+		}
+		if (normA > normiA) {
+			normiA = normA;
+		}
 	}
-	if (normA > normiA) {
-		normiA = normA;
-	}
-}
-cout << "NORMI:" << normiA << endl << endl;
-return normiA;
+	cout << "NORMI:" << normiA << endl << endl;
+	return normiA;
 }
 
 
@@ -95,63 +96,95 @@ void inversion(double **A, int N)
 	delete[] E;
 }
 
-double * gauss(double **a, double *y, int n)
-{
-	double *x, max;
-	int k, index;
-	const double eps = 0.00001; 
-	x = new double[n];
-	k = 0;
-	while (k < n)
-	{
-		max = abs(a[k][k]);
-		index = k;
-		for (int i = k + 1; i < n; i++)
-		{
-			if (abs(a[i][k]) > max)
-			{
-				max = abs(a[i][k]);
-				index = i;
+double * metgauss() {
+	double **x, *f, *t;
+	int n = 20;
+	x = new double*[n];
+	f = new double[n];
+	double a[20], b[20], c = 10, d[20], e[20];
+
+	//Задание коэфициэнтов
+	for (int i = 0; i < n; i++) {
+		//if (i < n - 1) {
+		d[i] = 1;
+		b[i] = 1;
+		a[i] = 0.1;
+		e[i] = 0.1;
+		//}
+		/*else {
+		double a1, b1, d1, e1;
+		cout « "a(n)=";
+		cin » a1;
+		cout « endl;
+		a[i] = a1;
+		cout « "b(n)=";
+		cin » b1;
+		cout « endl;
+		b[i] = b1;
+		cout « "d(n)=";
+		cin » d1;
+		cout « endl;
+		d[i] = d1;
+		cout « "e(n)=";
+		cin » e1;
+		cout « endl;
+		e[i] = e1;
+		}*/
+	}
+
+	//Задание матрицы
+	//cout « "Matrix A:" « endl;
+	for (int i = 0; i < n; i++) {
+		x[i] = new double[n + 1];
+		for (int j = 0; j < n; j++) {
+			x[i][j] = 0;
+		}
+	}
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (i == j)
+				x[i][j] = c;
+			if (i < n - 2) {
+				if (j == i + 2)
+					x[i][j] = e[i];
+			}
+			if (i < n - 1) {
+				if (j == i + 1)
+					x[i][j] = d[i];
+			}
+			if (i > 0) {
+				if (j == i - 1)
+					x[i][j] = b[i];
+			}
+			if (i > 1) {
+				if (j == i - 2)
+					x[i][j] = a[i];
 			}
 		}
-		if (max < eps)
-		{
-			cout << "Reshenie nevosmoghno polychit` iz-za null stolbca";
-			cout << index << " matrix A" << endl;
-			return 0;
-		}
-		for (int j = 0; j < n; j++)
-		{
-			double temp = a[k][j];
-			a[k][j] = a[index][j];
-			a[index][j] = temp;
-		}
-		double temp = y[k];
-		y[k] = y[index];
-		y[index] = temp;
 
-		for (int i = k; i < n; i++)
-		{
-			double temp = a[i][k];
-			if (abs(temp) < eps) continue; 
-			for (int j = 0; j < n; j++)
-				a[i][j] = a[i][j] / temp;
-			y[i] = y[i] / temp;
-			if (i == k)  continue; 
-			for (int j = 0; j < n; j++)
-				a[i][j] = a[i][j] - a[k][j];
-			y[i] = y[i] - y[k];
+	}
+	for (int i = 0; i < n; i++) {
+		x[i][n] = i + 1;
+	}
+	double *r;
+	r = new double[n];
+	double m = 0;
+	for (int k = 1; k < n; k = k + 1) {
+		for (int j = k; j < n; j = j + 1) {
+			m = x[j][k - 1] / x[k - 1][k - 1];
+			for (int i = 0; i < n + 1; i = i + 1) {
+				x[j][i] = x[j][i] - m * x[k - 1][i];
+			}
 		}
-		k++;
 	}
-
-	for (k = n - 1; k >= 0; k--)
-	{
-		x[k] = y[k];
-		for (int i = 0; i < k; i++)
-			y[i] = y[i] - a[i][k] * x[k];
+	for (int i = n - 1; i >= 0; i = i - 1) {
+		r[i] = x[i][n] / x[i][i];
+		for (int c = n - 1; c > i; c = c - 1) {
+			r[i] = r[i] - x[i][c] * r[c] / x[i][i];
+		}
 	}
-	return x;
+	return r;
 }
 
 int main(int argc, char *argv[])
@@ -165,10 +198,10 @@ int main(int argc, char *argv[])
 	//Задание коэфициэнтов
 	for (int i = 0; i < n; i++) {
 		//if (i < n - 1) {
-			d[i] = 1;
-			b[i] = 1;
-			a[i] = 0.1;
-			e[i] = 0.1;
+		d[i] = 1;
+		b[i] = 1;
+		a[i] = 0.1;
+		e[i] = 0.1;
 		//}
 		/*else {
 			double a1, b1, d1, e1;
@@ -240,7 +273,7 @@ int main(int argc, char *argv[])
 
 	//Гаус
 	cout << "Reshenie po Gausu:" << endl;
-	t = gauss(x, f, n);
+	t = metgauss();
 	for (int i = 0; i < n; i++) {
 		cout << "x[" << i << "]=" << t[i] << endl;
 	}
@@ -254,10 +287,10 @@ int main(int argc, char *argv[])
 	for (int i = 0; i < 1; i++) {
 		podstav = 0;
 		for (int j = 0; j < n; j++) {
-			if(x[i][j]!=0)
-			podstav += t[j] * x[i][j];
+			if (x[i][j] != 0)
+				podstav += t[j] * x[i][j];
 		}
-		vector = abs(f[i]-podstav);
+		vector = abs(f[i] - podstav);
 		normVec = vector;
 		//cout << vector[i] << ",";
 	}
@@ -274,14 +307,14 @@ int main(int argc, char *argv[])
 		//cout << vector[i] << ",";
 	}
 	//cout << ")" << endl<<endl;
-	cout << normVec <<endl<<endl;
+	cout << normVec << endl << endl;
 
 	//Гаус-Зейдель
 	cout << "Reshenie po Gausu-Zeidely:" << endl;
 	double *p, *r;
 	p = new double[n];
 	r = new double[n];
-	int iteration=0;
+	int iteration = 0;
 	do
 	{
 		for (int i = 0; i < n; i++)
@@ -296,8 +329,7 @@ int main(int argc, char *argv[])
 			r[i] = (f[i] - var) / x[i][i];
 		}
 		iteration++;
-	} 
-	while (!shodimost(r, p));
+	} while (!shodimost(r, p));
 	for (int i = 0; i < n; i++) {
 		cout << "x[" << i << "]=" << r[i] << endl;
 	}
@@ -306,7 +338,7 @@ int main(int argc, char *argv[])
 
 	//Вектор невязки для метода Гауса-Зейделя
 	double podstav1, vector1;
-	double normVec1=0;
+	double normVec1 = 0;
 	cout << "Vector neviazki Gaus-Zeidel V=";
 	for (int i = 0; i < 1; i++) {
 		podstav1 = 0;
@@ -333,15 +365,15 @@ int main(int argc, char *argv[])
 	//cout << ")" << endl<<endl;
 	cout << normVec1 << endl << endl;
 
-	
 
-	
+
+
 	//Обратная матрица, её норма и вычисление числа обусловленности (делается последним)
 	cout << "Inversion matrix A:" << endl;
 	inversion(x, n);
 	/*for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			
+
 			if (fabs(x[i][j]) < 0.00001)
 				x[i][j] = 0;
 			cout << x[i][j] << ", ";
@@ -350,7 +382,7 @@ int main(int argc, char *argv[])
 	}*/
 	cout << "Normi inversion matrix: ";
 	double norm2 = NORM(x, n);
-	cout << "Chislo obyslovlennosti u=" << norm1 * norm2 <<endl;
+	cout << "Chislo obyslovlennosti u=" << norm1 * norm2 << endl;
 
 
 	/*for (int i = 1; i < n; i++) {
