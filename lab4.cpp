@@ -281,7 +281,7 @@ int main(int argc, char *argv[])
 	fout.open("ans1.dat");
 	for (int i = 0; i < n; i++) {
 		cout << "x[" << i << "]=" << t[i] << endl;
-		fout << "x[" << i << "]=" << t[i] << endl;
+		fout << t[i] << endl;
 	}
 	cout << endl;
 
@@ -341,7 +341,7 @@ int main(int argc, char *argv[])
 	} while (!shodimost(r, p));
 	for (int i = 0; i < n; i++) {
 		cout << "x[" << i << "]=" << r[i] << endl;
-		fout << "x[" << i << "]=" << r[i] << endl;
+		fout << r[i] << endl;
 	}
 	cout << "Iteration:" << iteration << endl;
 	cout << endl;
