@@ -341,7 +341,7 @@ int main(int argc, char *argv[])
 	} while (!shodimost(r, p));
 	for (int i = 0; i < n; i++) {
 		cout << "x[" << i << "]=" << r[i] << endl;
-		fout << r[i] << endl;
+		fout1 << r[i] << endl;
 	}
 	cout << "Iteration:" << iteration << endl;
 	cout << endl;
