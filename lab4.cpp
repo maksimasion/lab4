@@ -1,8 +1,10 @@
-﻿#include<iostream>
-#include<math.h>
+#include<iostream>
 #include<string>
+#include <fstream>
 #include<cstdlib>
 using namespace std;
+
+std::ofstream fout;
 
 double NORM(double **x, double n) {
 	double normiA = 0;
@@ -96,7 +98,7 @@ void inversion(double **A, int N)
 	delete[] E;
 }
 
-double * metgauss() {
+double * gauss_method() {
 	double **x, *f, *t;
 	int n = 20;
 	x = new double*[n];
@@ -165,7 +167,7 @@ double * metgauss() {
 
 	}
 	for (int i = 0; i < n; i++) {
-		x[i][n] = i + 1;
+		x[i][n] = i+1;
 	}
 	double *r;
 	r = new double[n];
@@ -189,6 +191,7 @@ double * metgauss() {
 
 int main(int argc, char *argv[])
 {
+
 	double **x, *f, *t;
 	int n = 20;
 	x = new double*[n];
@@ -273,9 +276,12 @@ int main(int argc, char *argv[])
 
 	//Гаус
 	cout << "Reshenie po Gausu:" << endl;
-	t = metgauss();
+	std::ofstream fout;
+	t = gauss_method();
+	fout.open("ans1.dat");
 	for (int i = 0; i < n; i++) {
 		cout << "x[" << i << "]=" << t[i] << endl;
+		fout << "x[" << i << "]=" << t[i] << endl;
 	}
 	cout << endl;
 
@@ -308,9 +314,12 @@ int main(int argc, char *argv[])
 	}
 	//cout << ")" << endl<<endl;
 	cout << normVec << endl << endl;
+	//////////////////////////////////////////////////////////////////////
 
 	//Гаус-Зейдель
 	cout << "Reshenie po Gausu-Zeidely:" << endl;
+	std::ofstream fout1;
+	fout1.open("ans2.dat");
 	double *p, *r;
 	p = new double[n];
 	r = new double[n];
@@ -332,6 +341,7 @@ int main(int argc, char *argv[])
 	} while (!shodimost(r, p));
 	for (int i = 0; i < n; i++) {
 		cout << "x[" << i << "]=" << r[i] << endl;
+		fout << "x[" << i << "]=" << r[i] << endl;
 	}
 	cout << "Iteration:" << iteration << endl;
 	cout << endl;
